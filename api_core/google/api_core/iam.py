@@ -141,7 +141,8 @@ class Policy(collections_abc.MutableMapping):
     def owners(self):
         """Legacy access to owner role.
 
-        DEPRECATED:  use ``policy["roles/owners"]`` instead."""
+        DEPRECATED:  use `policy.bindings` to access bindings instead.
+        """
         result = set()
         for role in self._OWNER_ROLES:
             for member in self.get(role, ()):
@@ -152,7 +153,8 @@ class Policy(collections_abc.MutableMapping):
     def owners(self, value):
         """Update owners.
 
-        DEPRECATED:  use ``policy["roles/owners"] = value`` instead."""
+        DEPRECATED:  use `policy.bindings` to access bindings instead.
+        """
         warnings.warn(
             _ASSIGNMENT_DEPRECATED_MSG.format("owners", OWNER_ROLE), DeprecationWarning
         )
@@ -162,7 +164,8 @@ class Policy(collections_abc.MutableMapping):
     def editors(self):
         """Legacy access to editor role.
 
-        DEPRECATED:  use ``policy["roles/editors"]`` instead."""
+        DEPRECATED:  use `policy.bindings` to access bindings instead.
+        """
         result = set()
         for role in self._EDITOR_ROLES:
             for member in self.get(role, ()):
@@ -173,7 +176,8 @@ class Policy(collections_abc.MutableMapping):
     def editors(self, value):
         """Update editors.
 
-        DEPRECATED:  use ``policy["roles/editors"] = value`` instead."""
+        DEPRECATED:  use `policy.bindings` to modify bindings instead.
+        """
         warnings.warn(
             _ASSIGNMENT_DEPRECATED_MSG.format("editors", EDITOR_ROLE),
             DeprecationWarning,
@@ -184,7 +188,7 @@ class Policy(collections_abc.MutableMapping):
     def viewers(self):
         """Legacy access to viewer role.
 
-        DEPRECATED:  use ``policy["roles/viewers"]`` instead
+        DEPRECATED:  use `policy.bindings` to modify bindings instead.
         """
         result = set()
         for role in self._VIEWER_ROLES:
@@ -196,7 +200,7 @@ class Policy(collections_abc.MutableMapping):
     def viewers(self, value):
         """Update viewers.
 
-        DEPRECATED:  use ``policy["roles/viewers"] = value`` instead.
+        DEPRECATED:  use `policy.bindings` to modify bindings instead.
         """
         warnings.warn(
             _ASSIGNMENT_DEPRECATED_MSG.format("viewers", VIEWER_ROLE),
@@ -213,6 +217,8 @@ class Policy(collections_abc.MutableMapping):
 
         Returns:
             str: A member string corresponding to the given user.
+
+        DEPRECATED:  set the role `user:{email}` in the binding instead.
         """
         return "user:%s" % (email,)
 
@@ -225,6 +231,8 @@ class Policy(collections_abc.MutableMapping):
 
         Returns:
             str: A member string corresponding to the given service account.
+
+        DEPRECATED:  set the role `serviceAccount:{email}` in the binding instead.
         """
         return "serviceAccount:%s" % (email,)
 
@@ -237,6 +245,8 @@ class Policy(collections_abc.MutableMapping):
 
         Returns:
             str: A member string corresponding to the given group.
+
+        DEPRECATED:  set the role `group:{email}` in the binding instead.
         """
         return "group:%s" % (email,)
 
@@ -249,6 +259,8 @@ class Policy(collections_abc.MutableMapping):
 
         Returns:
             str: A member string corresponding to the given domain.
+
+        DEPRECATED:  set the role `domain:{email}` in the binding instead.
         """
         return "domain:%s" % (domain,)
 
@@ -258,6 +270,8 @@ class Policy(collections_abc.MutableMapping):
 
         Returns:
             str: A member string representing all users.
+
+        DEPRECATED:  set the role `allUsers` in the binding instead.
         """
         return "allUsers"
 
@@ -267,6 +281,8 @@ class Policy(collections_abc.MutableMapping):
 
         Returns:
             str: A member string representing all authenticated users.
+
+        DEPRECATED:  set the role `allAuthenticatedUsers` in the binding instead.
         """
         return "allAuthenticatedUsers"
 
