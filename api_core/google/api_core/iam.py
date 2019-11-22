@@ -103,7 +103,7 @@ class Policy(collections_abc.MutableMapping):
 
     def __setitem__(self, key, value):
         self.__check_version__()
-        value = list(value)
+        value = list(set(value))
         for binding in self._bindings:
             if binding['role'] is key:
                 binding['member'] = value
