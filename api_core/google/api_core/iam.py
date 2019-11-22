@@ -116,6 +116,7 @@ class Policy(collections_abc.MutableMapping):
             if b['role'] is key:
                 self._bindings.remove(b)
                 return
+        raise KeyError(key)
 
     def __getiterator__(self):
         for binding in self._bindings:
