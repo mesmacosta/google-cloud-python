@@ -88,7 +88,7 @@ class Policy(collections_abc.MutableMapping):
 
     def __iter__(self):
         self.__check_version__()
-        return self.__getiterator__()
+        return (binding['role'] for binding in self._bindings)
 
     def __len__(self):
         self.__check_version__()
@@ -117,10 +117,6 @@ class Policy(collections_abc.MutableMapping):
                 self._bindings.remove(b)
                 return
         raise KeyError(key)
-
-    def __getiterator__(self):
-        for binding in self._bindings:
-            yield binding['role']
 
     def __check_version__(self):
         """Raise InvalidOperationException if version is greater than 1."""
