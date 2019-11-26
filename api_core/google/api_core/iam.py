@@ -55,6 +55,9 @@ VIEWER_ROLE = "roles/viewer"
 _ASSIGNMENT_DEPRECATED_MSG = """\
 Assigning to '{}' is deprecated.  Replace with 'policy[{}] = members."""
 
+_DICT_ACCESS_MSG = """\
+Dict access is not supported on policies with version > 1 or with conditional bindings."""
+
 
 class InvalidOperationException(Exception):
     """Raised when trying to use Policy class as a dict."""
@@ -123,7 +126,7 @@ class Policy(collections_abc.MutableMapping):
         raise_version = self.version is not None and self.version > 1
 
         if raise_version or self._contains_conditions():
-            raise InvalidOperationException("TODO: insert migration message")
+            raise InvalidOperationException(_DICT_ACCESS_MSG)
 
     def _contains_conditions(self):
         for b in self._bindings:

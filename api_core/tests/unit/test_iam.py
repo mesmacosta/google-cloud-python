@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import pytest
+from google.api_core.iam import InvalidOperationException, _DICT_ACCESS_MSG
 
 
 class TestPolicy:
@@ -53,6 +54,19 @@ class TestPolicy:
         policy = self._make_one()
         assert policy["nonesuch"] == set()
 
+    def test___getitem___version3(self):
+        policy = self._make_one("DEADBEEF", 3)
+        with pytest.raises(InvalidOperationException, match=_DICT_ACCESS_MSG):
+            _role = policy["role"]
+
+    def test___getitem___with_conditions(self):
+        USER = "user:phred@example.com"
+        CONDITION = {"expression": "2 > 1"}
+        policy = self._make_one("DEADBEEF", 1)
+        policy.bindings = [{"role": "role/reader", "members": [USER], "condition": CONDITION}]
+        with pytest.raises(InvalidOperationException, match=_DICT_ACCESS_MSG):
+            _role = policy["role/reader"]
+
     def test___setitem__(self):
         USER = "user:phred@example.com"
         PRINCIPALS = set([USER])
@@ -61,6 +75,19 @@ class TestPolicy:
         assert policy["rolename"] == PRINCIPALS
         assert len(policy) == 1
         assert dict(policy) == {"rolename": PRINCIPALS}
+
+    def test___setitem___version3(self):
+        policy = self._make_one("DEADBEEF", 3)
+        with pytest.raises(InvalidOperationException, match=_DICT_ACCESS_MSG):
+            policy["role/reader"] = ["user:phred@example.com"]
+
+    def test___setitem___with_conditions(self):
+        USER = "user:phred@example.com"
+        CONDITION = {"expression": "2 > 1"}
+        policy = self._make_one("DEADBEEF", 1)
+        policy.bindings = [{"role": "role/reader", "members": [USER], "condition": CONDITION}]
+        with pytest.raises(InvalidOperationException, match=_DICT_ACCESS_MSG):
+            policy['role/reader'] = ["user:phred@example.com"]
 
     def test___delitem___hit(self):
         policy = self._make_one()
@@ -73,6 +100,19 @@ class TestPolicy:
         policy = self._make_one()
         with pytest.raises(KeyError):
             del policy["nonesuch"]
+
+    def test___delitem___version3(self):
+        policy = self._make_one("DEADBEEF", 3)
+        with pytest.raises(InvalidOperationException, match=_DICT_ACCESS_MSG):
+            del policy["role/reader"]
+
+    def test___delitem___with_conditions(self):
+        USER = "user:phred@example.com"
+        CONDITION = {"expression": "2 > 1"}
+        policy = self._make_one("DEADBEEF", 1)
+        policy.bindings = [{"role": "role/reader", "members": [USER], "condition": CONDITION}]
+        with pytest.raises(InvalidOperationException, match=_DICT_ACCESS_MSG):
+            del policy['role/reader']
 
     def test_owners_getter(self):
         from google.api_core.iam import OWNER_ROLE
