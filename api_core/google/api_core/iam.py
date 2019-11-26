@@ -321,8 +321,13 @@ class Policy(collections_abc.MutableMapping):
             resource["version"] = self.version
 
         if self._bindings and len(self._bindings) > 0:
-            bindings = [b for b in self._bindings if b['members']]
+            bindings = []
+            for binding in self._bindings:
+                if binding['members']:
+                    binding['members'] = sorted(binding['members'])
+                    bindings.append(binding)
+
             if bindings:
-                resource["bindings"] = bindings
+                resource["bindings"] = sorted(bindings)
 
         return resource

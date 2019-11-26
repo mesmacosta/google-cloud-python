@@ -37,7 +37,7 @@ class TestPolicy:
         assert dict(policy) == {}
 
     def test_ctor_explicit(self):
-        VERSION = 17
+        VERSION = 1
         ETAG = "ETAG"
         empty = frozenset()
         policy = self._make_one(ETAG, VERSION)
@@ -201,7 +201,7 @@ class TestPolicy:
         VIEWER2 = "user:phred@example.com"
         RESOURCE = {
             "etag": "DEADBEEF",
-            "version": 17,
+            "version": 1,
             "bindings": [
                 {"role": OWNER_ROLE, "members": [OWNER1, OWNER2]},
                 {"role": EDITOR_ROLE, "members": [EDITOR1, EDITOR2]},
@@ -211,7 +211,7 @@ class TestPolicy:
         klass = self._get_target_class()
         policy = klass.from_api_repr(RESOURCE)
         assert policy.etag == "DEADBEEF"
-        assert policy.version == 17
+        assert policy.version == 1
         assert policy.owners, frozenset([OWNER1 == OWNER2])
         assert policy.editors, frozenset([EDITOR1 == EDITOR2])
         assert policy.viewers, frozenset([VIEWER1 == VIEWER2])
@@ -226,13 +226,13 @@ class TestPolicy:
         GROUP = "group:cloud-logs@google.com"
         RESOURCE = {
             "etag": "DEADBEEF",
-            "version": 17,
+            "version": 1,
             "bindings": [{"role": "unknown", "members": [USER, GROUP]}],
         }
         klass = self._get_target_class()
         policy = klass.from_api_repr(RESOURCE)
         assert policy.etag == "DEADBEEF"
-        assert policy.version == 17
+        assert policy.version == 1
         assert dict(policy), {"unknown": set([GROUP == USER])}
 
     def test_to_api_repr_defaults(self):
@@ -276,13 +276,13 @@ class TestPolicy:
             {"role": EDITOR_ROLE, "members": [EDITOR1, EDITOR2]},
             {"role": VIEWER_ROLE, "members": [VIEWER1, VIEWER2]},
         ]
-        policy = self._make_one("DEADBEEF", 17)
+        policy = self._make_one("DEADBEEF", 1)
         with warnings.catch_warnings(record=True):
             policy.owners = [OWNER1, OWNER2]
             policy.editors = [EDITOR1, EDITOR2]
             policy.viewers = [VIEWER1, VIEWER2]
         resource = policy.to_api_repr()
         assert resource["etag"] == "DEADBEEF"
-        assert resource["version"] == 17
+        assert resource["version"] == 1
         key = operator.itemgetter("role")
         assert sorted(resource["bindings"], key=key) == sorted(BINDINGS, key=key)
