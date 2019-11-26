@@ -120,8 +120,16 @@ class Policy(collections_abc.MutableMapping):
 
     def __check_version__(self):
         """Raise InvalidOperationException if version is greater than 1."""
-        if self.version is not None and self.version > 1: # TODO: add check for conditions in bindings (mirror C#)
+        raise_version = self.version is not None and self.version > 1
+
+        if raise_version or self._contains_conditions():
             raise InvalidOperationException("TODO: insert migration message")
+
+    def _contains_conditions(self):
+        for b in self._bindings:
+            if b.get('condition') is not None:
+                return True
+        return False
 
     @property
     def bindings(self):
