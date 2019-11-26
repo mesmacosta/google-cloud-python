@@ -64,7 +64,7 @@ class TestPolicy:
 
     def test___delitem___hit(self):
         policy = self._make_one()
-        policy._bindings["rolename"] = ["phred@example.com"]
+        policy.bindings = [{"role": "rolename", "members": ["phred@example.com"]}]
         del policy["rolename"]
         assert len(policy) == 0
         assert dict(policy) == {}
