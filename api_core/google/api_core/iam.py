@@ -61,6 +61,7 @@ Dict access is not supported on policies with version > 1 or with conditional bi
 
 class InvalidOperationException(Exception):
     """Raised when trying to use Policy class as a dict."""
+
     pass
 
 
@@ -91,7 +92,7 @@ class Policy(collections_abc.MutableMapping):
 
     def __iter__(self):
         self.__check_version__()
-        return (binding['role'] for binding in self._bindings)
+        return (binding["role"] for binding in self._bindings)
 
     def __len__(self):
         self.__check_version__()
@@ -100,23 +101,23 @@ class Policy(collections_abc.MutableMapping):
     def __getitem__(self, key):
         self.__check_version__()
         for b in self._bindings:
-            if b['role'] is key:
-                return set(b['members'])
+            if b["role"] is key:
+                return set(b["members"])
         return set()
 
     def __setitem__(self, key, value):
         self.__check_version__()
         value = list(set(value))
         for binding in self._bindings:
-            if binding['role'] is key:
-                binding['member'] = value
+            if binding["role"] is key:
+                binding["member"] = value
                 return
-        self._bindings.append({'role': key, 'members': value})
+        self._bindings.append({"role": key, "members": value})
 
     def __delitem__(self, key):
         self.__check_version__()
         for b in self._bindings:
-            if b['role'] is key:
+            if b["role"] is key:
                 self._bindings.remove(b)
                 return
         raise KeyError(key)
@@ -130,7 +131,7 @@ class Policy(collections_abc.MutableMapping):
 
     def _contains_conditions(self):
         for b in self._bindings:
-            if b.get('condition') is not None:
+            if b.get("condition") is not None:
                 return True
         return False
 
@@ -326,8 +327,8 @@ class Policy(collections_abc.MutableMapping):
         if self._bindings and len(self._bindings) > 0:
             bindings = []
             for binding in self._bindings:
-                if binding['members']:
-                    binding['members'] = sorted(binding['members'])
+                if binding["members"]:
+                    binding["members"] = sorted(binding["members"])
                     bindings.append(binding)
 
             if bindings:
