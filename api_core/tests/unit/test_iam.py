@@ -114,6 +114,14 @@ class TestPolicy:
         with pytest.raises(InvalidOperationException, match=_DICT_ACCESS_MSG):
             del policy['role/reader']
 
+    def test_bindings_property(self):
+        USER = "user:phred@example.com"
+        CONDITION = {"expression": "2 > 1"}
+        policy = self._make_one()
+        BINDINGS = [{"role": "role/reader", "members": [USER], "condition": CONDITION}]
+        policy.bindings = BINDINGS
+        assert policy.bindings == BINDINGS
+
     def test_owners_getter(self):
         from google.api_core.iam import OWNER_ROLE
 
