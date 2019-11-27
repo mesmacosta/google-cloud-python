@@ -54,7 +54,7 @@ VIEWER_ROLE = "roles/viewer"
 """Generic role implying rights to access an object."""
 
 _ASSIGNMENT_DEPRECATED_MSG = """\
-Assigning to '{}' is deprecated.  Replace with 'policy[{}] = members."""
+Assigning to '{}' is deprecated. Use the `policy.bindings` property to modify bindings instead."""
 
 _FACTORY_DEPRECATED_MSG = """\
 Factory method {0} is deprecated. Replace with '{0}'."""
