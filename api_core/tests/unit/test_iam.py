@@ -13,7 +13,8 @@
 # limitations under the License.
 
 import pytest
-from google.api_core.iam import InvalidOperationException, _DICT_ACCESS_MSG
+
+from google.api_core.iam import _DICT_ACCESS_MSG, InvalidOperationException
 
 
 class TestPolicy:
@@ -57,7 +58,7 @@ class TestPolicy:
     def test___getitem___version3(self):
         policy = self._make_one("DEADBEEF", 3)
         with pytest.raises(InvalidOperationException, match=_DICT_ACCESS_MSG):
-            _role = policy["role"]
+            policy["role"]
 
     def test___getitem___with_conditions(self):
         USER = "user:phred@example.com"
@@ -65,7 +66,7 @@ class TestPolicy:
         policy = self._make_one("DEADBEEF", 1)
         policy.bindings = [{"role": "role/reader", "members": [USER], "condition": CONDITION}]
         with pytest.raises(InvalidOperationException, match=_DICT_ACCESS_MSG):
-            _role = policy["role/reader"]
+            policy["role/reader"]
 
     def test___setitem__(self):
         USER = "user:phred@example.com"
