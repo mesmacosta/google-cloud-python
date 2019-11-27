@@ -196,36 +196,72 @@ class TestPolicy:
         assert policy[VIEWER_ROLE] == expected
 
     def test_user(self):
+        import warnings
+
         EMAIL = "phred@example.com"
         MEMBER = "user:%s" % (EMAIL,)
         policy = self._make_one()
-        assert policy.user(EMAIL) == MEMBER
+        with warnings.catch_warnings(record=True) as warned:
+            assert policy.user(EMAIL) == MEMBER
+
+        warning, = warned
+        assert warning.category is DeprecationWarning
 
     def test_service_account(self):
+        import warnings
+
         EMAIL = "phred@example.com"
         MEMBER = "serviceAccount:%s" % (EMAIL,)
         policy = self._make_one()
-        assert policy.service_account(EMAIL) == MEMBER
+        with warnings.catch_warnings(record=True) as warned:
+            assert policy.service_account(EMAIL) == MEMBER
+
+        warning, = warned
+        assert warning.category is DeprecationWarning
 
     def test_group(self):
+        import warnings
+
         EMAIL = "phred@example.com"
         MEMBER = "group:%s" % (EMAIL,)
         policy = self._make_one()
-        assert policy.group(EMAIL) == MEMBER
+        with warnings.catch_warnings(record=True) as warned:
+            assert policy.group(EMAIL) == MEMBER
+
+        warning, = warned
+        assert warning.category is DeprecationWarning
 
     def test_domain(self):
+        import warnings
+
         DOMAIN = "example.com"
         MEMBER = "domain:%s" % (DOMAIN,)
         policy = self._make_one()
-        assert policy.domain(DOMAIN) == MEMBER
+        with warnings.catch_warnings(record=True) as warned:
+            assert policy.domain(DOMAIN) == MEMBER
+
+        warning, = warned
+        assert warning.category is DeprecationWarning
 
     def test_all_users(self):
+        import warnings
+
         policy = self._make_one()
-        assert policy.all_users() == "allUsers"
+        with warnings.catch_warnings(record=True) as warned:
+            assert policy.all_users() == "allUsers"
+
+        warning, = warned
+        assert warning.category is DeprecationWarning
 
     def test_authenticated_users(self):
+        import warnings
+
         policy = self._make_one()
-        assert policy.authenticated_users() == "allAuthenticatedUsers"
+        with warnings.catch_warnings(record=True) as warned:
+            assert policy.authenticated_users() == "allAuthenticatedUsers"
+
+        warning, = warned
+        assert warning.category is DeprecationWarning
 
     def test_from_api_repr_only_etag(self):
         empty = frozenset()

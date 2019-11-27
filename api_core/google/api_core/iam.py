@@ -56,6 +56,9 @@ VIEWER_ROLE = "roles/viewer"
 _ASSIGNMENT_DEPRECATED_MSG = """\
 Assigning to '{}' is deprecated.  Replace with 'policy[{}] = members."""
 
+_FACTORY_DEPRECATED_MSG = """\
+Factory method {0} is deprecated. Replace with '{0}'."""
+
 _DICT_ACCESS_MSG = """\
 Dict access is not supported on policies with version > 1 or with conditional bindings."""
 
@@ -229,6 +232,10 @@ class Policy(collections_abc.MutableMapping):
 
         DEPRECATED:  set the role `user:{email}` in the binding instead.
         """
+        warnings.warn(
+            _FACTORY_DEPRECATED_MSG.format("user:{email}"),
+            DeprecationWarning,
+        )
         return "user:%s" % (email,)
 
     @staticmethod
@@ -243,6 +250,10 @@ class Policy(collections_abc.MutableMapping):
 
         DEPRECATED:  set the role `serviceAccount:{email}` in the binding instead.
         """
+        warnings.warn(
+            _FACTORY_DEPRECATED_MSG.format("serviceAccount:{email}"),
+            DeprecationWarning,
+        )
         return "serviceAccount:%s" % (email,)
 
     @staticmethod
@@ -257,6 +268,10 @@ class Policy(collections_abc.MutableMapping):
 
         DEPRECATED:  set the role `group:{email}` in the binding instead.
         """
+        warnings.warn(
+            _FACTORY_DEPRECATED_MSG.format("group:{email}"),
+            DeprecationWarning,
+        )
         return "group:%s" % (email,)
 
     @staticmethod
@@ -271,6 +286,10 @@ class Policy(collections_abc.MutableMapping):
 
         DEPRECATED:  set the role `domain:{email}` in the binding instead.
         """
+        warnings.warn(
+            _FACTORY_DEPRECATED_MSG.format("domain:{email}"),
+            DeprecationWarning,
+        )
         return "domain:%s" % (domain,)
 
     @staticmethod
@@ -282,6 +301,10 @@ class Policy(collections_abc.MutableMapping):
 
         DEPRECATED:  set the role `allUsers` in the binding instead.
         """
+        warnings.warn(
+            _FACTORY_DEPRECATED_MSG.format("allUsers"),
+            DeprecationWarning,
+        )
         return "allUsers"
 
     @staticmethod
@@ -293,6 +316,10 @@ class Policy(collections_abc.MutableMapping):
 
         DEPRECATED:  set the role `allAuthenticatedUsers` in the binding instead.
         """
+        warnings.warn(
+            _FACTORY_DEPRECATED_MSG.format("allAuthenticatedUsers"),
+            DeprecationWarning,
+        )
         return "allAuthenticatedUsers"
 
     @classmethod
