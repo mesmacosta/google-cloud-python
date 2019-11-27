@@ -34,6 +34,7 @@ Example usage:
 """
 
 import collections
+import operator
 import warnings
 
 try:
@@ -332,6 +333,8 @@ class Policy(collections_abc.MutableMapping):
                     bindings.append(binding)
 
             if bindings:
-                resource["bindings"] = sorted(bindings)
+                # Sort bindings by role
+                key = operator.itemgetter("role")
+                resource["bindings"] = sorted(bindings, key=key)
 
         return resource
