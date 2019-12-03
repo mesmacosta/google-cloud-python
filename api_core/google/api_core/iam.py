@@ -35,13 +35,13 @@ Example usage:
        },
        {
            "role": "roles/editor",
-           "members": "allAuthenticatedUsers"
+           "members": {"allAuthenticatedUsers"}
        },
        {
            "role": "roles/viewer",
-           "members": "allUsers"
+           "members": {"allUsers"}
            "condition": {
-               "title": "requested_time",
+               "title": "request_time",
                "description": "Requests made before 2021-01-01T00:00:00Z",
                "expression": "request.time < timestamp(\"2021-01-01T00:00:00Z\")"
            }
@@ -195,7 +195,7 @@ class Policy(collections_abc.MutableMapping):
                 "role": "roles/viewer",
                 "members": {USER, ADMIN_GROUP, SERVICE_ACCOUNT},
                 "condition": {
-                    "title": "requested_time",
+                    "title": "request_time",
                     "description": "Requests made before 2021-01-01T00:00:00Z", # Optional
                     "expression": "request.time < timestamp(\"2021-01-01T00:00:00Z\")"
                 }
