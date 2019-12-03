@@ -106,12 +106,12 @@ class Policy(collections_abc.MutableMapping):
         self.__check_version__()
         for b in self._bindings:
             if b["role"] is key:
-                return set(b["members"])
+                return b["members"]
         return set()
 
     def __setitem__(self, key, value):
         self.__check_version__()
-        value = list(set(value))
+        value = set(value)
         for binding in self._bindings:
             if binding["role"] is key:
                 binding["member"] = value
@@ -335,7 +335,11 @@ class Policy(collections_abc.MutableMapping):
         version = resource.get("version")
         etag = resource.get("etag")
         policy = cls(etag, version)
-        policy.bindings = resource.get("bindings", ())
+        policy.bindings = resource.get("bindings", [])
+
+        for binding in policy.bindings:
+            binding['members'] = set(binding.get("members", ()))
+
         return policy
 
     def to_api_repr(self):

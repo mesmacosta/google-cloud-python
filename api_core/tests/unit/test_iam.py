@@ -305,6 +305,11 @@ class TestPolicy:
             EDITOR_ROLE: set([EDITOR1, EDITOR2]),
             VIEWER_ROLE: set([VIEWER1, VIEWER2]),
         }
+        assert policy.bindings == [
+            {"role": OWNER_ROLE, "members": set([OWNER1, OWNER2])},
+            {"role": EDITOR_ROLE, "members": set([EDITOR1, EDITOR2])},
+            {"role": VIEWER_ROLE, "members": set([VIEWER1, VIEWER2])},
+        ]
 
     def test_from_api_repr_unknown_role(self):
         USER = "user:phred@example.com"
