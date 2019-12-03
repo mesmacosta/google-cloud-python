@@ -21,14 +21,32 @@ Example usage:
 .. code-block:: python
 
    # ``get_iam_policy`` returns a :class:'~google.api_core.iam.Policy`.
-   policy = resource.get_iam_policy()
+   policy = resource.get_iam_policy(requested_policy_version=3)
 
-   phred = policy.user("phred@example.com")
-   admin_group = policy.group("admins@groups.example.com")
-   account = policy.service_account("account-1234@accounts.example.com")
-   policy["roles/owner"] = [phred, admin_group, account]
-   policy["roles/editor"] = policy.authenticated_users()
-   policy["roles/viewer"] = policy.all_users()
+   phred = "user:phred@example.com"
+   admin_group = "group:admins@groups.example.com"
+   account = "serviceAccount:account-1234@accounts.example.com"
+
+   policy.version = 3
+   policy.bindings = [
+       {
+           "role": "roles/owner",
+           "members": {phred, admin_group, account}
+       },
+       {
+           "role": "roles/editor",
+           "members": "allAuthenticatedUsers"
+       },
+       {
+           "role": "roles/viewer",
+           "members": "allUsers"
+           "condition": {
+               "title": "requested_time",
+               "description": "Requests made before 2021-01-01T00:00:00Z",
+               "expression": "request.time < timestamp(\"2021-01-01T00:00:00Z\")"
+           }
+       }
+   ]
 
    resource.set_iam_policy(policy)
 """
@@ -141,12 +159,54 @@ class Policy(collections_abc.MutableMapping):
 
     @property
     def bindings(self):
-        """Gets the policy's bindings."""
+        """:obj:`list` of :obj:`dict`: The policy's bindings list.
+        :obj:`dict` Binding:
+            role (str): Role that is assigned to `members`.
+            members (:obj:`set` of str): Specifies the identities associated to this binding.
+            condition (dict of str:str): Specifies a condition under which this binding will apply.
+
+        :obj:`dict` Condition:
+            title (str): Title for the condition.
+            description (:obj:str, optional): Description of the condition.
+            expression: A CEL expression.
+
+        Note:
+            Using conditions in bindings requires the policy's version to be set
+            to `3`.
+            Accessing the policy using dict operations will raise InvalidOperationException
+            when the policy's version is set to 3. Use the policy.bindings getter/setter
+            to retrieve and modify the policy's bindings.
+
+        See:
+            Policy versions https://cloud.google.com/iam/docs/policies#versions
+            Conditions overview https://cloud.google.com/iam/docs/conditions-overview.
+
+        Example:
+        .. code-block:: python
+        USER = "user:phred@example.com"
+        ADMIN_GROUP = "group:admins@groups.example.com"
+        SERVICE_ACCOUNT = "serviceAccount:account-1234@accounts.example.com"
+
+        # Set policy's version to 3 before setting bindings containing conditions.
+        policy.version = 3
+
+        policy.bindings = [
+            {
+                "role": "roles/viewer",
+                "members": {USER, ADMIN_GROUP, SERVICE_ACCOUNT},
+                "condition": {
+                    "title": "requested_time",
+                    "description": "Requests made before 2021-01-01T00:00:00Z", # Optional
+                    "expression": "request.time < timestamp(\"2021-01-01T00:00:00Z\")"
+                }
+            },
+            ...
+        ]
+        """
         return self._bindings
 
     @bindings.setter
     def bindings(self, bindings):
-        """Sets the policy's bindings."""
         self._bindings = bindings
 
     @property
