@@ -124,7 +124,7 @@ class Policy(collections_abc.MutableMapping):
     def __getitem__(self, key):
         self.__check_version__()
         for b in self._bindings:
-            if b["role"] is key:
+            if b["role"] == key:
                 return b["members"]
         return set()
 
@@ -132,7 +132,7 @@ class Policy(collections_abc.MutableMapping):
         self.__check_version__()
         value = set(value)
         for binding in self._bindings:
-            if binding["role"] is key:
+            if binding["role"] == key:
                 binding["member"] = value
                 return
         self._bindings.append({"role": key, "members": value})
@@ -140,7 +140,7 @@ class Policy(collections_abc.MutableMapping):
     def __delitem__(self, key):
         self.__check_version__()
         for b in self._bindings:
-            if b["role"] is key:
+            if b["role"] == key:
                 self._bindings.remove(b)
                 return
         raise KeyError(key)

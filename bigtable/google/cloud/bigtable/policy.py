@@ -90,7 +90,7 @@ class Policy(BasePolicy):
             :end-before: [END bigtable_admins_policy]
         """
         result = set()
-        for member in self._bindings.get(BIGTABLE_ADMIN_ROLE, ()):
+        for member in self.get(BIGTABLE_ADMIN_ROLE, ()):
             result.add(member)
         return frozenset(result)
 
@@ -105,7 +105,7 @@ class Policy(BasePolicy):
             :end-before: [END bigtable_readers_policy]
         """
         result = set()
-        for member in self._bindings.get(BIGTABLE_READER_ROLE, ()):
+        for member in self.get(BIGTABLE_READER_ROLE, ()):
             result.add(member)
         return frozenset(result)
 
@@ -120,7 +120,7 @@ class Policy(BasePolicy):
             :end-before: [END bigtable_users_policy]
         """
         result = set()
-        for member in self._bindings.get(BIGTABLE_USER_ROLE, ()):
+        for member in self.get(BIGTABLE_USER_ROLE, ()):
             result.add(member)
         return frozenset(result)
 
@@ -135,7 +135,7 @@ class Policy(BasePolicy):
             :end-before: [END bigtable_viewers_policy]
         """
         result = set()
-        for member in self._bindings.get(BIGTABLE_VIEWER_ROLE, ()):
+        for member in self.get(BIGTABLE_VIEWER_ROLE, ()):
             result.add(member)
         return frozenset(result)
 
@@ -152,8 +152,20 @@ class Policy(BasePolicy):
         """
         policy = cls(policy_pb.etag, policy_pb.version)
 
-        for binding in policy_pb.bindings:
-            policy[binding.role] = sorted(binding.members)
+        policy.bindings = bindings = []
+        for binding_pb in policy_pb.bindings:
+            binding = {
+                "role": binding_pb.role,
+                "members": set(binding_pb.members)
+            }
+            condition = binding_pb.condition
+            if condition and condition.expression:
+                binding["condition"] = {
+                    "title": condition.title,
+                    "description": condition.description,
+                    "expression": condition.expression,
+                }
+            bindings.append(binding)
 
         return policy
 
@@ -169,8 +181,12 @@ class Policy(BasePolicy):
             etag=self.etag,
             version=self.version or 0,
             bindings=[
-                policy_pb2.Binding(role=role, members=sorted(self[role]))
-                for role in self
+                policy_pb2.Binding(
+                    role=binding["role"],
+                    members=sorted(binding["members"]),
+                    condition=binding.get("condition"))
+                for binding in self.bindings
+                if binding["members"]
             ],
         )
 
