@@ -95,7 +95,8 @@ class Policy(collections_abc.MutableMapping):
 
     Args:
         etag (Optional[str]): ETag used to identify a unique of the policy
-        version (Optional[int]): unique version of the policy
+        version (Optional[int]): The syntax schema version of the policy.
+
     """
 
     _OWNER_ROLES = (OWNER_ROLE,)
@@ -172,10 +173,12 @@ class Policy(collections_abc.MutableMapping):
 
         Note:
             Using conditions in bindings requires the policy's version to be set
-            to `3`.
+            to `3` or greater, depending on the versions that are currently supported.
+
             Accessing the policy using dict operations will raise InvalidOperationException
-            when the policy's version is set to 3. Use the policy.bindings getter/setter
-            to retrieve and modify the policy's bindings.
+            when the policy's version is set to 3.
+
+            Use the policy.bindings getter/setter to retrieve and modify the policy's bindings.
 
         See:
             Policy versions https://cloud.google.com/iam/docs/policies#versions
